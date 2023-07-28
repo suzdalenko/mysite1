@@ -2,8 +2,11 @@ import csv
 import os
 import requests
 import json
+
+from mysite import settings
 from ..myresponse import SuzdalenkoJsonResponse
 from ..models import Collection, CollectionLines, Person
+
 
 
 
@@ -56,7 +59,7 @@ class CollectionController:
         for line_l in list_lines:
             address    = line_l.country+'+'+line_l.region+'+'+line_l.city
             address    = address.strip().lower().replace(' ', '+').replace('++', '+')
-            url_path   = 'https://maps.googleapis.com/maps/api/geocode/json?address='+address+'&key=AIzaSyCoxqAOQdGqxOOGz6jumPpV-3eziosg7gw'
+            url_path   = 'https://maps.googleapis.com/maps/api/geocode/json?address='+address+'&key='+settings.GOOGLE_KEY
             try:
                 result     = requests.get(url_path)
                 parsed     = json.loads(result.content)

@@ -8,7 +8,7 @@ class LinesCollectionController:
         match actionget:
             # /lines_collection/colection_user/ user_id, colection_id
             case "colection_user":
-                ressult_query = CollectionLines.objects.filter(user_id=request.GET.get("user_id"), colection_id=request.GET.get("colection_id"))
+                ressult_query = CollectionLines.objects.filter(user_id=request.GET.get("user_id"), colection_id=request.GET.get("colection_id")).order_by("client_name")
 
             
 
