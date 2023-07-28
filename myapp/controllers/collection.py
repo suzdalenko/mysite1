@@ -8,7 +8,7 @@ from ..models import Collection, CollectionLines, Person
 
 
 def handle_uploaded_file(f):
-    with open('mysite/static/upload/'+f.name, 'wb+') as destination:
+    with open('mysite/mysite/static/'+f.name, 'wb+') as destination:    
         for chunk in f.chunks():
             destination.write(chunk)
 
@@ -38,7 +38,7 @@ class CollectionController:
 
         CollectionLines.objects.filter(user_id=collection.user_id, colection_id=coll.id).delete()
 
-        for line in open('mysite/static/upload/'+rec_file_name, 'r', encoding='latin', errors='ignore'):
+        for line in open('mysite/mysite/static/'+rec_file_name, 'r', encoding='latin', errors='ignore'):
             csv_row = line.split(';')
             line_collection = CollectionLines(user_id=collection.user_id, colection_id=collection.id, order_id=int(csv_row[0]), client_name=str(csv_row[1]), delivery_date=str(csv_row[2]))
             line_collection.palets  = csv_row[3]; int_palets += int(csv_row[3])
@@ -52,22 +52,24 @@ class CollectionController:
         collection.kilos   = int_kilos
         collection.save()
 
-
         list_lines = CollectionLines.objects.filter(user_id=collection.user_id)
         for line_l in list_lines:
             address    = line_l.country+'+'+line_l.region+'+'+line_l.city
             address    = address.strip().lower().replace(' ', '+').replace('++', '+')
             url_path   = 'https://maps.googleapis.com/maps/api/geocode/json?address='+address+'&key=AIzaSyCoxqAOQdGqxOOGz6jumPpV-3eziosg7gw'
-            result     = requests.get(url_path)
-            parsed     = json.loads(result.content)
-            first      = parsed['results'][0]
-            second     = first['geometry']['location']
-            line_l.lat = second['lat']
-            line_l.lng = second['lng']
-            line_l.save()
+            try:
+                result     = requests.get(url_path)
+                parsed     = json.loads(result.content)
+                first      = parsed['results'][0]
+                second     = first['geometry']['location']
+                line_l.lat = second['lat']
+                line_l.lng = second['lng']
+                line_l.save()
+            except:
+                pass
 
         try:
-            os.remove('mysite/static/upload/'+rec_file_name)
+            os.remove('mysite/mysite/static/'+rec_file_name)
         except:
             pass
 
