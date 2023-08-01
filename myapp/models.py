@@ -14,10 +14,15 @@ class LastVisit(models.Model):
 
 class Person(models.Model):
     name     = models.CharField(max_length=22, null=True)
-    uid      = models.CharField(max_length=77, null=True)
+    uid      = models.CharField(max_length=77, null=True, unique=True)
     email    = models.CharField(max_length=22, null=True, unique=True)
     password = models.CharField(max_length=22, null=True)
     lang     = models.CharField(max_length=11, null=True)
+    country  = models.CharField(max_length=22, null=True)
+    region   = models.CharField(max_length=22, null=True)
+    city     = models.CharField(max_length=22, null=True)
+    lat      = models.CharField(max_length=33, null=True)
+    lng      = models.CharField(max_length=33, null=True)
     class Meta:
         db_table = 'person'
         indexes  = [
@@ -27,7 +32,7 @@ class Person(models.Model):
 
 class Collection(models.Model):
     user_id    = models.IntegerField(null=True)
-    date       = models.CharField(max_length=22)
+    date       = models.CharField(max_length=22, null=True)
     pallets    = models.IntegerField(null=True)
     kilos      = models.IntegerField(null=True)
     uid        = models.CharField(null=True, max_length=33)
@@ -49,19 +54,19 @@ class CollectionLines(models.Model):
     delivery_date = models.CharField(max_length=33)
     palets        = models.IntegerField(null=True)
     kilos         = models.IntegerField(null=True)
-    export        = models.CharField(max_length=11)
-    country       = models.CharField(max_length=22)
-    region        = models.CharField(max_length=22)
-    city          = models.CharField(max_length=22)
+    export        = models.CharField(max_length=11, null=True)
+    country       = models.CharField(max_length=22, null=True)
+    region        = models.CharField(max_length=22, null=True)
+    city          = models.CharField(max_length=22, null=True)
     lat           = models.CharField(max_length=33, null=True)
     lng           = models.CharField(max_length=33, null=True)
     truck         = models.IntegerField(null=True)
-    truck_name    = models.CharField(max_length=22)
-    order         = models.IntegerField(null=True)
+    truck_name    = models.CharField(max_length=33, null=True)
+    by_order      = models.IntegerField(null=True)
     meters        = models.IntegerField(null=True)
     zipcode       = models.CharField(max_length=22, null=True)
     conductor_id  = models.IntegerField(null=True)
-
+    line_id       = models.IntegerField(null=True)
 
     class Meta:
         db_table = 'colectionlines'

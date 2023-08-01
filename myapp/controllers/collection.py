@@ -4,7 +4,7 @@ import requests
 import json
 
 from mysite import settings
-from ..myresponse import SuzdalenkoJsonResponse
+from ..myresponse import SetLocateAddress, SuzdalenkoJsonResponse
 from ..models import Collection, CollectionLines, Person
 
 
@@ -50,6 +50,8 @@ class CollectionController:
             line_collection.region  = csv_row[6].strip()
             line_collection.city    = csv_row[7].strip()
             line_collection.save()
+            line_collection.line_id = line_collection.id
+            line_collection.save()
 
         collection.pallets = int_palets
         collection.kilos   = int_kilos
@@ -57,20 +59,8 @@ class CollectionController:
 
         list_lines = CollectionLines.objects.filter(user_id=collection.user_id)
         for line_l in list_lines:
-            address    = line_l.country+'+'+line_l.region+'+'+line_l.city
-            address    = address.strip().lower().replace(' ', '+').replace('++', '+')
-            url_path   = 'https://maps.googleapis.com/maps/api/geocode/json?address='+address+'&key='+settings.GOOGLE_KEY
-            try:
-                result     = requests.get(url_path)
-                parsed     = json.loads(result.content)
-                first      = parsed['results'][0]
-                second     = first['geometry']['location']
-                line_l.lat = second['lat']
-                line_l.lng = second['lng']
-                line_l.save()
-            except:
-                pass
-
+            SetLocateAddress(line_l)
+            
         try:
             os.remove('mysite/mysite/static/'+rec_file_name)
         except:
@@ -81,7 +71,7 @@ class CollectionController:
 
     # /getAllCollection GET user_id
     def getAllCollection(request):
-        collections   = Collection.objects.filter(user_id=request.GET.get('user_id')); print(collections)
+        collections   = Collection.objects.filter(user_id=request.GET.get('user_id')).order_by("-week")
         response_data = {}
         inner_array   = []
         for item in collections.iterator():
