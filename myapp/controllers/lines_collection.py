@@ -15,17 +15,17 @@ class LinesCollectionController:
             # /lines_collection/orders_by_route/
             case "orders_by_route":
                 pass
-                slq_req =   """SELECT c.id, c.order_id, c.client_name, c.truck_name, p.lat, p.lng, c.palets, c.kilos
+                slq_req =   """SELECT c.id, c.order_id, c.client_name, c.truck_name, p.lat AS plat, p.lng AS plng, c.palets, c.kilos, c.lat AS clat, c.lng AS clng, c.city, c.truck
                                 FROM colectionlines c
                                 INNER JOIN person p ON c.user_id = p.id
-                                WHERE colection_id = """+request.GET.get("collection_id")+""" AND truck = """+request.GET.get("truck_id")+""" """
+                                WHERE colection_id = """+request.GET.get("collection_id")+""" AND truck = """+request.GET.get("truck_id")+""" ORDER BY by_order ASC"""
                 cursor = connection.cursor()
                 cursor.execute(slq_req)
                 slq_req = cursor.fetchall()
                 cursor.close()
-                array_data = []
+                array_data = []; print(slq_req)
                 for line in slq_req:
-                    empty_obj = {"id": line[0], "order_id": line[1], "client_name": line[2], "truck_name": line[3], "lat": line[4], "lng": line[5], "palets": line[6], "kilos": line[7]}
+                    empty_obj = {"id": line[0],"order_id":line[1],"client_name":line[2],"truck_name":line[3],"plat":line[4],"plng":line[5],"palets":line[6],"kilos":line[7],"clat":line[8],"clng":line[9],"city":line[10],"truck":line[11]}
                     array_data.append(empty_obj)
                 return SuzdalenkoJsonResponse({'result':array_data})
     
