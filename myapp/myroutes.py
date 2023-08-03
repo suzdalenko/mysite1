@@ -1,5 +1,5 @@
 from django.urls import path
-
+from .controllers.excel import Excel
 from .controllers.api import Api
 from .controllers import person, collection, lines_collection
 
@@ -18,7 +18,7 @@ urlpatterns = [
     path("lines_collection/<str:actionget>/", lines_collection.LinesCollectionController.dataget),
     path("post_parameters/<str:actionpost>/", lines_collection.LinesCollectionController.dataupdate),
 
-
+    path("basic_report/", Excel.basic_report),
 
     # /myapp/api/
     path("api/", Api.test_one)
