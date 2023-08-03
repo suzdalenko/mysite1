@@ -63,7 +63,7 @@ class Excel:
                 for col, value in dims.items():
                     ws.column_dimensions[letter[col]].width = value + 11     
                    
-            urlDirection = 'excel/'+str(userId)+'/'+str(collectionId)
+            urlDirection = 'static/'+str(userId)
             Path(urlDirection).mkdir(parents=True, exist_ok=True)
             wb.save(urlDirection+'/suzdal_'+str(collectionId)+'.xlsx')
 
