@@ -65,6 +65,7 @@ class Excel:
                    
             urlDirection = 'static/'+str(userId)
             Path(urlDirection).mkdir(parents=True, exist_ok=True)
-            wb.save(urlDirection+'/suzdal_'+str(collectionId)+'.xlsx')
+            urlFile = urlDirection+'/suzdal_'+str(collectionId)+'.xlsx'
+            wb.save(urlFile)
 
-            return SuzdalenkoJsonResponse({"res":"res"})
+            return SuzdalenkoJsonResponse({"res":urlFile})
