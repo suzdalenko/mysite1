@@ -41,21 +41,21 @@ class Excel:
                 ws.merged_cells.ranges.add("A1:E1")
                 ws['A1'] = titleSheetA
                 ws.append(["", "", "", "", ""])
-                ws.append(["Id Pedido", "Cliente", "Paletas", "Kilos", "Fecha Entrega"])
+                ws.append(["Id Pedido", "Cliente", "Cuidad", "Paletas", "Kilos", "Fecha Entrega"])
 
                 paletA = 0
                 kilosA = 0
                 for l in lines:
-                    ws.append([l.order_id, l.client_name, l.palets, l.kilos, l.delivery_date])
+                    ws.append([l.order_id, l.client_name, l.city, l.palets, l.kilos, l.delivery_date])
                     paletA += l.palets
                     kilosA += l.kilos
-                ws.append(["", "", paletA, kilosA, ""])
+                ws.append(["", "", "", paletA, kilosA, ""])
 
                 firstTemlate += 1
 
 
                 dims = {}
-                letter = ['A', 'B', 'C', 'D', 'E', 'F']
+                letter = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
                 for row in ws.rows:
                     for cell in row:
                         if cell.value:

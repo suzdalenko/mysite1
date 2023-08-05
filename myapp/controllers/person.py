@@ -9,12 +9,14 @@ class PersonController:
     def userLogin(request):
         PERSON_TUPLE             = Person.objects.get_or_create(email=request.GET.get('email'), uid=request.GET.get('uid'))
         PERSON_TUPLE[0].lang     = request.META.get('HTTP_ACCEPT_LANGUAGE', ['en-US', ])
-        PERSON_TUPLE[0].password = request.GET.get('password')
-        if PERSON_TUPLE[0].lat == None:
-           PERSON_TUPLE[0].lat  = '43.3099809'
-        if PERSON_TUPLE[0].lng == None:
-           PERSON_TUPLE[0].lng  = '-3.853442199999999'
-        PERSON_TUPLE[0].save()
+        if PERSON_TUPLE[0].password == None:
+           PERSON_TUPLE[0].password = request.GET.get('password')
+           PERSON_TUPLE[0].lat      = '43.3099809'
+           PERSON_TUPLE[0].lng      = '-3.853442199999999'
+           PERSON_TUPLE[0].country  = 'España'
+           PERSON_TUPLE[0].region   = 'Cantabria'
+           PERSON_TUPLE[0].city     = 'Santa Maria de Cayon'
+           PERSON_TUPLE[0].save()
         
         VISIT_TUPLE     = LastVisit.objects.get_or_create(user_id=PERSON_TUPLE[0].id)
         VISIT_OBJ       = VISIT_TUPLE[0]
