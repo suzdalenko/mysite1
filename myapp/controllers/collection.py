@@ -11,7 +11,7 @@ from ..models import Collection, CollectionLines, Person
 
 
 def handle_uploaded_file(f):
-    with open('mysite/mysite/static/'+f.name, 'wb+') as destination:    
+    with open('mysite/static/'+f.name, 'wb+') as destination:    
         for chunk in f.chunks():
             destination.write(chunk)
 
@@ -41,7 +41,7 @@ class CollectionController:
 
         CollectionLines.objects.filter(user_id=collection.user_id, colection_id=coll.id).delete()
 
-        for line in open('mysite/mysite/static/'+rec_file_name, 'r', encoding='latin', errors='ignore'):
+        for line in open('mysite/static/'+rec_file_name, 'r', encoding='latin', errors='ignore'):
             csv_row = line.split(';')
             line_collection = CollectionLines(user_id=collection.user_id, colection_id=collection.id, order_id=int(csv_row[0]), client_name=str(csv_row[1]), delivery_date=str(csv_row[2]))
             line_collection.palets  = csv_row[3]; int_palets += int(csv_row[3])
@@ -63,7 +63,7 @@ class CollectionController:
             
         try:
             i = 0
-            # os.remove('mysite/mysite/static/'+rec_file_name)
+            # os.remove('mysite/static/'+rec_file_name)
         except:
             pass
 

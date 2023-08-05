@@ -63,9 +63,9 @@ class Excel:
                 for col, value in dims.items():
                     ws.column_dimensions[letter[col]].width = value + 11     
                    
-            urlDirection = 'mysite/static'  # /' +str(userId)
+            urlDirection = 'mysite/static/'
             Path(urlDirection).mkdir(parents=True, exist_ok=True)
-            urlFile = urlDirection+'/suzdal_'+str(collectionId)+'.xlsx'
+            urlFile = urlDirection+'suzdal_'+str(collectionId)+'.xlsx'
             wb.save(urlFile)
 
             return SuzdalenkoJsonResponse({"res":"static/suzdal_"+str(collectionId)+".xlsx"})
