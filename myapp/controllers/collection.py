@@ -100,14 +100,3 @@ class CollectionController:
 
         return SuzdalenkoJsonResponse({"route":"deleted"})
 
-"""
-x = Person.objects.filter(name="baby").first()
-
-with open('mysite/static/upload/'+rec_file_name, "r") as f:
-           reader = csv.reader(f, delimiter="\t")
-           for i, line in enumerate(reader):
-               print('-----------'+str(i)+'-----')
-               print(line[0].split(';'))
-               csv_row = line[0].split(';')
-
-"""
