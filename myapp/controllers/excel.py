@@ -38,7 +38,7 @@ class Excel:
                 else:
                     ws = wb.create_sheet(titleSheetA)
 
-                ws.merged_cells.ranges.add("A1:E1")
+                # ws.merged_cells("A1:E1")
                 ws['A1'] = titleSheetA
                 ws.append(["", "", "", "", ""])
                 ws.append(["Id Pedido", "Cliente", "Cuidad", "Paletas", "Kilos", "Fecha Entrega"])
@@ -63,9 +63,9 @@ class Excel:
                 for col, value in dims.items():
                     ws.column_dimensions[letter[col]].width = value + 11     
                    
-            urlDirection = 'static/'+str(userId)
+            urlDirection = 'mysite/static'  # /' +str(userId)
             Path(urlDirection).mkdir(parents=True, exist_ok=True)
             urlFile = urlDirection+'/suzdal_'+str(collectionId)+'.xlsx'
             wb.save(urlFile)
 
-            return SuzdalenkoJsonResponse({"res":urlFile})
+            return SuzdalenkoJsonResponse({"res":"static/suzdal_"+str(collectionId)+".xlsx"})
