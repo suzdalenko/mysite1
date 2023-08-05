@@ -3,7 +3,7 @@ from django.db import connection
 from pathlib import Path
 from openpyxl.styles import Alignment, PatternFill, Font, Color
 from myapp.models import CollectionLines
-from myapp.myresponse import SuzdalenkoJsonResponse, UserLoginCorrectry
+from myapp.myresponse import SuzdalenkoJsonResponse, UserLoginCorrectry, get_current_file_directory
 
 
 class Excel:
@@ -63,9 +63,8 @@ class Excel:
                 for col, value in dims.items():
                     ws.column_dimensions[letter[col]].width = value + 11     
                    
-            urlDirection = 'mysite/static/'
-            Path(urlDirection).mkdir(parents=True, exist_ok=True)
+            urlDirection = get_current_file_directory(request)
             urlFile = urlDirection+'suzdal_'+str(collectionId)+'.xlsx'
             wb.save(urlFile)
 
-            return SuzdalenkoJsonResponse({"res":"static/suzdal_"+str(collectionId)+".xlsx"})
+            return SuzdalenkoJsonResponse({"res":urlFile})

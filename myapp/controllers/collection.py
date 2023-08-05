@@ -1,17 +1,12 @@
-import csv
-import os
-import requests
-import json
-
 from mysite import settings
-from ..myresponse import SetLocateAddress, SuzdalenkoJsonResponse
+from ..myresponse import SetLocateAddress, SuzdalenkoJsonResponse, get_current_file_directory
 from ..models import Collection, CollectionLines, Person
 
 
+def handle_uploaded_file(f, rq):
+    fileUrl = get_current_file_directory(rq)
 
-
-def handle_uploaded_file(f):
-    with open('mysite/static/'+f.name, 'wb+') as destination:    
+    with open(fileUrl+f.name, 'wb+') as destination:    
         for chunk in f.chunks():
             destination.write(chunk)
 
@@ -22,11 +17,14 @@ def handle_uploaded_file(f):
 class CollectionController:
     # /uploadFileCollection POST user_id uid csv_file ...
     def uploadFileCollection(request):
+     
+        print(request.build_absolute_uri())
+
         rec_file_name = request.FILES['file'].name
         file_extension = rec_file_name.split('.')[1]
         if file_extension.lower() != 'csv': 11 / 0
 
-        handle_uploaded_file(request.FILES['file'])
+        handle_uploaded_file(request.FILES['file'], request)
 
         coll = Collection.objects.get_or_create(user_id=request.POST.get('user_id'), uid=request.POST.get('uid'), week=request.POST.get('week'))[0]
         collection = Collection.objects.get(id=coll.id)
@@ -40,8 +38,9 @@ class CollectionController:
         int_kilos  = 0
 
         CollectionLines.objects.filter(user_id=collection.user_id, colection_id=coll.id).delete()
-
-        for line in open('mysite/static/'+rec_file_name, 'r', encoding='latin', errors='ignore'):
+        fileUrl = get_current_file_directory(request)
+        
+        for line in open(fileUrl+rec_file_name, 'r', encoding='latin', errors='ignore'):
             csv_row = line.split(';')
             line_collection = CollectionLines(user_id=collection.user_id, colection_id=collection.id, order_id=int(csv_row[0]), client_name=str(csv_row[1]), delivery_date=str(csv_row[2]))
             line_collection.palets  = csv_row[3]; int_palets += int(csv_row[3])
@@ -63,7 +62,7 @@ class CollectionController:
             
         try:
             i = 0
-            # os.remove('mysite/static/'+rec_file_name)
+            # os.remove(fileUrl+rec_file_name)
         except:
             pass
 

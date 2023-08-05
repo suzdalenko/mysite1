@@ -88,3 +88,10 @@ def measureDistance(mi_location, line_location):
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
     distance = int( R * c * 1000)
     return distance
+
+
+def get_current_file_directory(rq):
+    if '127.0' in  rq.build_absolute_uri():
+        return 'static/'
+    else:
+        return 'mysite/static/'
