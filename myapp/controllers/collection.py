@@ -62,7 +62,8 @@ class CollectionController:
             SetLocateAddress(line_l)
             
         try:
-            os.remove('mysite/mysite/static/'+rec_file_name)
+            i = 0
+            # os.remove('mysite/mysite/static/'+rec_file_name)
         except:
             pass
 
