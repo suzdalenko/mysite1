@@ -79,11 +79,9 @@ class Excel:
     
 
     def doCrawl(urlFile):
-        print("START "+urlFile)
         time.sleep(11)
         try:
             os.remove(urlFile)
         except:
             pass
-        print("STOP "+urlFile)
         
