@@ -78,9 +78,16 @@ class LinesCollectionController:
                        
                 OrderingPackagesByTruck(RQ_COLLECTION_ID, TRACK_NUMBER, USERID)
 
+            # /post_parameters/release_orders
             case 'release_orders':
                 CollectionLines.objects.filter(colection_id=RQ_COLLECTION_ID).update(truck=None, truck_name=None, by_order=None, meters=None)
                 pass    
+
+            # /post_parameters/change_track_name
+            case 'change_track_name':
+                truckString = request.POST.get("name")
+                truckInt = request.POST.get("number")
+                CollectionLines.objects.filter(colection_id=RQ_COLLECTION_ID, truck=truckInt).update(truck_name=truckString)
                
         
         cursor.close()
