@@ -1,3 +1,6 @@
+import os
+import threading
+import time
 import openpyxl
 from django.db import connection
 from pathlib import Path
@@ -64,8 +67,23 @@ class Excel:
                     ws.column_dimensions[letter[col]].width = value + 11     
                    
             urlDirection = get_current_file_directory(request)
-            urlFile = 'urlDirection'+'suzdal_'+str(collectionId)+'.xlsx'
+            urlFile = urlDirection+'suzdal_'+str(collectionId)+'.xlsx'
             wb.save(urlFile)
-            urlFile = 'static/'+'suzdal_'+str(collectionId)+'.xlsx'
+            urlExcel = 'static/'+'suzdal_'+str(collectionId)+'.xlsx'
 
-            return SuzdalenkoJsonResponse({"res":urlFile})
+            tA = threading.Thread(target=Excel.doCrawl, args=[urlFile])
+            tA.setDaemon(True)
+            tA.start()
+
+            return SuzdalenkoJsonResponse({"res":urlExcel})
+    
+
+    def doCrawl(urlFile):
+        print("START "+urlFile)
+        time.sleep(11)
+        try:
+            os.remove(urlFile)
+        except:
+            pass
+        print("STOP "+urlFile)
+        

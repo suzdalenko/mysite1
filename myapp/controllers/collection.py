@@ -1,3 +1,4 @@
+import os
 from mysite import settings
 from ..myresponse import SetLocateAddress, SuzdalenkoJsonResponse, get_current_file_directory
 from ..models import Collection, CollectionLines, Person
@@ -62,7 +63,7 @@ class CollectionController:
             
         try:
             i = 0
-            # os.remove(fileUrl+rec_file_name)
+            os.remove(fileUrl+rec_file_name)
         except:
             pass
 
