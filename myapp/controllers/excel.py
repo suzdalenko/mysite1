@@ -64,7 +64,8 @@ class Excel:
                     ws.column_dimensions[letter[col]].width = value + 11     
                    
             urlDirection = get_current_file_directory(request)
-            urlFile = urlDirection+'suzdal_'+str(collectionId)+'.xlsx'
+            urlFile = 'urlDirection'+'suzdal_'+str(collectionId)+'.xlsx'
             wb.save(urlFile)
+            urlFile = 'static/'+'suzdal_'+str(collectionId)+'.xlsx'
 
             return SuzdalenkoJsonResponse({"res":urlFile})
