@@ -18,9 +18,6 @@ def handle_uploaded_file(f, rq):
 class CollectionController:
     # /uploadFileCollection POST user_id uid csv_file ...
     def uploadFileCollection(request):
-     
-        print(request.build_absolute_uri())
-
         rec_file_name = request.FILES['file'].name
         file_extension = rec_file_name.split('.')[1]
         if file_extension.lower() != 'csv': 11 / 0

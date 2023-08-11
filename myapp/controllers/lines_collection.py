@@ -5,6 +5,7 @@ from django.db import connection
 class LinesCollectionController:
 
 
+
     def dataget(request, actionget):
         match actionget:
             # /lines_collection/colection_user/ user_id, colection_id
@@ -23,12 +24,13 @@ class LinesCollectionController:
                 cursor.execute(slq_req)
                 slq_req = cursor.fetchall()
                 cursor.close()
-                array_data = []; print(slq_req)
+                array_data = []
                 for line in slq_req:
                     empty_obj = {"id": line[0],"order_id":line[1],"client_name":line[2],"truck_name":line[3],"plat":line[4],"plng":line[5],"palets":line[6],"kilos":line[7],"clat":line[8],"clng":line[9],"city":line[10],"truck":line[11]}
                     array_data.append(empty_obj)
                 return SuzdalenkoJsonResponse({'result':array_data})
     
+
 
     def dataupdate(request, actionpost):
         if UserLoginCorrectry(request) != True:
@@ -36,10 +38,10 @@ class LinesCollectionController:
         
         cursor = connection.cursor()
 
-        # /post_parameters/create_new_track
         RQ_COLLECTION_ID = request.POST.get("collection_id")
         USERID           = request.POST.get("user_id")
         match actionpost:
+            # /post_parameters/create_new_track
             case "create_new_track":
                 LIST_LINES_IDS   = request.POST.get('list_lines_id').split(',')
                 TRACK_DATA       = request.POST.get("track_data")
@@ -78,18 +80,47 @@ class LinesCollectionController:
                        
                 OrderingPackagesByTruck(RQ_COLLECTION_ID, TRACK_NUMBER, USERID)
 
+
             # /post_parameters/release_orders
             case 'release_orders':
-                CollectionLines.objects.filter(colection_id=RQ_COLLECTION_ID).update(truck=None, truck_name=None, by_order=None, meters=None)
-                pass    
+                CollectionLines.objects.filter(colection_id=RQ_COLLECTION_ID).update(truck=None, truck_name=None, by_order=None, meters=None)    
+
 
             # /post_parameters/change_track_name
             case 'change_track_name':
                 truckString = request.POST.get("name")
                 truckInt = request.POST.get("number")
                 CollectionLines.objects.filter(colection_id=RQ_COLLECTION_ID, truck=truckInt).update(truck_name=truckString)
-               
-        
+
+
+            # /post_parameters/relese_the_track
+            case 'relese_the_track':
+                truckInt = request.POST.get("number")
+                CollectionLines.objects.filter(colection_id=RQ_COLLECTION_ID, truck=truckInt).update(by_order=None, meters=None, truck=None, truck_name=None)
+
+
+            # /post_parameters/relese_the_order
+            case 'relese_the_order':
+                CUR_ACTION = request.POST.get("action")
+                LINE_ID    = request.POST.get("line_id")
+                TRUCK_NUM  = request.POST.get("truck_number")
+                NEW_TRUCK  = request.POST.get("new_truck")
+                if CUR_ACTION == 'free':
+                    CollectionLines.objects.filter(id=LINE_ID).update(by_order=None, meters=None, truck=None, truck_name=None)
+                else:
+                    """ traer datos camion existente  """
+                    try:
+                        truckLinesExists = CollectionLines.objects.filter(colection_id=RQ_COLLECTION_ID, truck=NEW_TRUCK).exclude(truck_name=None).first()
+                        truckName = truckLinesExists.truck_name
+                        print(truckLinesExists)
+                    except:
+                        print("PASS")
+                        truckName = None
+
+                CollectionLines.objects.filter(id=LINE_ID).update(truck=NEW_TRUCK, truck_name=truckName)
+                OrderingPackagesByTruck(RQ_COLLECTION_ID, TRUCK_NUM, USERID)
+                OrderingPackagesByTruck(RQ_COLLECTION_ID, NEW_TRUCK, USERID)
+                  
         cursor.close()
         return SuzdalenkoJsonResponse({'actionpost' : actionpost})
         

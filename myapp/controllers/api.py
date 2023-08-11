@@ -32,7 +32,6 @@ class Api:
                 if cell.value:
                   dims[cell.column] = max((dims.get(cell.column, 0), len(str(cell.value))))    
         for col, value in dims.items():
-            print(letter[col])
             ws.column_dimensions[letter[col]].width = value + 3
 
         wb.save("sample.xlsx")
@@ -44,10 +43,10 @@ class Api:
 
     #   # ws.append(['A', '', '', '', '', 'B', '', '', '', ''])
     #   # ws.append([1, 2, 33, '', '', 'D', '', '', '', ''])
-# 
+
     #   # ws.merged_cells.ranges.add("A1:E1")
     #   # ws.merged_cells.ranges.add("F1:J1")
-# 
+
     #   # currentCell = ws.cell('A1')
     #   # currentCell.alignment = Alignment(horizontal='center')
     #   
