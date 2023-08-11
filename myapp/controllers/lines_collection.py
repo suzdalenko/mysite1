@@ -122,5 +122,5 @@ class LinesCollectionController:
                 OrderingPackagesByTruck(RQ_COLLECTION_ID, NEW_TRUCK, USERID)
                   
         cursor.close()
-        return SuzdalenkoJsonResponse({'actionpost' : actionpost})
+        return SuzdalenkoJsonResponse({'actionpostSuzdalenko' : actionpost})
         
