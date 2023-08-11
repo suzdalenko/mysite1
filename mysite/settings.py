@@ -1,6 +1,11 @@
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+if 'x-route-planning' in str(BASE_DIR):
+    pass
+else: 
+    BASE_DIR = Path(__file__).resolve().parent
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-96a3#k(or!%2oi+76-=bofcs4)ees9rz@8muc2$f4uz&p+qqpe'
@@ -66,7 +71,8 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': 'db.sqlite3',
     }
 }
 
