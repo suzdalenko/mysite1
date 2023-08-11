@@ -1,4 +1,4 @@
-hola , hola esto es una prueba de .... alexey
+hola , hola esto es una prueba de .... alexey suzdal
 
 python -m django --version
 
