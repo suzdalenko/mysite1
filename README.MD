@@ -1,3 +1,5 @@
+hola , hola esto es una prueba de .... alexey
+
 python -m django --version
 
 python -m django startproject myproject
