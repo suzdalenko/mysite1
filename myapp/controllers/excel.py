@@ -67,9 +67,9 @@ class Excel:
                     ws.column_dimensions[letter[col]].width = value + 11     
                    
             urlDirection = get_current_file_directory(request)
-            urlFile = urlDirection+'suzdal_'+str(collectionId)+'.xlsx'
+            urlFile = urlDirection+'excel_'+str(collectionId)+'.xlsx'
             wb.save(urlFile)
-            urlExcel = 'static/'+'suzdal_'+str(collectionId)+'.xlsx'
+            urlExcel = 'static/'+'excel_'+str(collectionId)+'.xlsx'
 
             tA = threading.Thread(target=Excel.doCrawl, args=[urlFile])
             tA.setDaemon(True)
