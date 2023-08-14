@@ -16,7 +16,7 @@ class LinesCollectionController:
             # /lines_collection/orders_by_route/
             case "orders_by_route":
                 pass
-                slq_req =   """SELECT c.id, c.order_id, c.client_name, c.truck_name, p.lat AS plat, p.lng AS plng, c.palets, c.kilos, c.lat AS clat, c.lng AS clng, c.city, c.truck
+                slq_req =   """SELECT c.id, c.order_id, c.client_name, c.truck_name, p.lat AS plat, p.lng AS plng, c.palets, c.kilos, c.lat AS clat, c.lng AS clng, c.city, c.truck, c.by_order
                                 FROM colectionlines c
                                 INNER JOIN person p ON c.user_id = p.id
                                 WHERE colection_id = """+request.GET.get("collection_id")+""" AND truck = """+request.GET.get("truck_id")+""" ORDER BY by_order ASC"""
@@ -26,7 +26,7 @@ class LinesCollectionController:
                 cursor.close()
                 array_data = []
                 for line in slq_req:
-                    empty_obj = {"id": line[0],"order_id":line[1],"client_name":line[2],"truck_name":line[3],"plat":line[4],"plng":line[5],"palets":line[6],"kilos":line[7],"clat":line[8],"clng":line[9],"city":line[10],"truck":line[11]}
+                    empty_obj = {"id": line[0],"order_id":line[1],"client_name":line[2],"truck_name":line[3],"plat":line[4],"plng":line[5],"palets":line[6],"kilos":line[7],"clat":line[8],"clng":line[9],"city":line[10],"truck":line[11],"by_order":line[12]}
                     array_data.append(empty_obj)
                 return SuzdalenkoJsonResponse({'result':array_data})
     
@@ -40,6 +40,8 @@ class LinesCollectionController:
 
         RQ_COLLECTION_ID = request.POST.get("collection_id")
         USERID           = request.POST.get("user_id")
+        TRACK_ID         = request.POST.get("truck_id")
+
         match actionpost:
             # /post_parameters/create_new_track
             case "create_new_track":
@@ -98,7 +100,6 @@ class LinesCollectionController:
                 truckInt = request.POST.get("number")
                 CollectionLines.objects.filter(colection_id=RQ_COLLECTION_ID, truck=truckInt).update(by_order=None, meters=None, truck=None, truck_name=None)
 
-
             # /post_parameters/relese_the_order
             case 'relese_the_order':
                 CUR_ACTION = request.POST.get("action")
@@ -107,6 +108,7 @@ class LinesCollectionController:
                 NEW_TRUCK  = request.POST.get("new_truck")
                 if CUR_ACTION == 'free':
                     CollectionLines.objects.filter(id=LINE_ID).update(by_order=None, meters=None, truck=None, truck_name=None)
+                    OrderingPackagesByTruck(RQ_COLLECTION_ID, TRUCK_NUM, USERID)
                 else:
                     """ traer datos camion existente  """
                     try:
@@ -120,6 +122,37 @@ class LinesCollectionController:
                 CollectionLines.objects.filter(id=LINE_ID).update(truck=NEW_TRUCK, truck_name=truckName)
                 OrderingPackagesByTruck(RQ_COLLECTION_ID, TRUCK_NUM, USERID)
                 OrderingPackagesByTruck(RQ_COLLECTION_ID, NEW_TRUCK, USERID)
+
+
+            # /post_parameters/change_by_order
+            case 'change_by_order':
+                listLines = CollectionLines.objects.filter(colection_id=RQ_COLLECTION_ID, truck=TRACK_ID)
+                FIRST_ID       = int(request.POST.get("first_id"))
+                FIRST_ORDER    = int(request.POST.get("first_or"))
+                SECOND_ID      = int(request.POST.get("second_id"))
+                SECOND_ORDER   = int(request.POST.get("second_or"))
+
+                if FIRST_ORDER < SECOND_ORDER:
+                    for lineO in listLines:
+                        if int(lineO.by_order) <= SECOND_ORDER:
+                            exampleLine = CollectionLines.objects.get(id=lineO.id)
+                            exampleLine.by_order = int(exampleLine.by_order) - 1
+                            exampleLine.save()
+                else:
+                    for lineO in listLines:
+                        if int(lineO.by_order) >= SECOND_ORDER:
+                            exampleLine = CollectionLines.objects.get(id=lineO.id)
+                            exampleLine.by_order = int(exampleLine.by_order) + 1
+                            exampleLine.save()
+
+                CollectionLines.objects.filter(id=FIRST_ID).update(by_order=SECOND_ORDER)
+
+                        
+
+
+
+
+
                   
         cursor.close()
         return SuzdalenkoJsonResponse({'actionpostSuzdalenko' : actionpost})
