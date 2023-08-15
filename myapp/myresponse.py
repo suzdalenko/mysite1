@@ -6,7 +6,7 @@ from django.core import serializers
 from .models import CollectionLines, Person
 from mysite import settings
 
-def SuzdalenkoJsonResponse(x):
+def DiscoJsonResponse(x):
     jsonResponse = JsonResponse(x)
     jsonResponse["Access-Control-Allow-Origin"] = "*"
     # jsonResponse["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
@@ -95,3 +95,30 @@ def get_current_file_directory(rq):
         return 'static/'
     else:
         return 'mysite/static/'
+    
+
+def RecalculateThisRoute(collectionId, trackNum):
+    firstLine = CollectionLines.objects.filter(colection_id=collectionId, truck=trackNum).exclude(by_order=None).order_by("by_order").first()
+    CollectionLines.objects.filter(colection_id=collectionId, truck=trackNum).exclude(id=firstLine.id).update(by_order=None, meters=None)
+    new_order_by = firstLine.by_order
+
+    list_lines_all = CollectionLines.objects.filter(colection_id=collectionId, truck=trackNum)                                                
+    for l in list_lines_all:
+        lines_without_order = CollectionLines.objects.filter(colection_id=collectionId, truck=trackNum, by_order=None)                        
+        # guardo metros comparando con localizacion USER
+        for lin_without in lines_without_order:
+            mi_location = { "lat": firstLine.lat, "lng": firstLine.lng }
+            try:
+                exist_location = CollectionLines.objects.filter(colection_id=collectionId, truck=trackNum, by_order__gt=0).order_by("-by_order").first()
+                mi_location = { "lat": exist_location.lat, "lng": exist_location.lng }
+            except:
+                pass
+            lin_without.meters = measureDistance(mi_location, lin_without)
+            lin_without.save()
+        # busco la ubicacion mas cercana y le pongo orden 1
+        try:
+            nearest_order = CollectionLines.objects.filter(colection_id=collectionId, truck=trackNum, by_order=None).order_by("meters").first()
+            new_order_by += 1
+            CollectionLines.objects.filter(id=nearest_order.id).update(by_order=new_order_by)
+        except:
+            pass 

@@ -1,6 +1,6 @@
 import os
 from mysite import settings
-from ..myresponse import SetLocateAddress, SuzdalenkoJsonResponse, get_current_file_directory
+from ..myresponse import SetLocateAddress, DiscoJsonResponse, get_current_file_directory
 from ..models import Collection, CollectionLines, Person
 
 
@@ -64,7 +64,7 @@ class CollectionController:
         except:
             pass
 
-        return SuzdalenkoJsonResponse({'file upload':'ok'})
+        return DiscoJsonResponse({'file upload':'ok'})
 
 
     # /getAllCollection GET user_id
@@ -82,7 +82,7 @@ class CollectionController:
             interObj['week']      = item.week
             inner_array.append(interObj)
         response_data['data'] = inner_array
-        response_data = SuzdalenkoJsonResponse(response_data)
+        response_data = DiscoJsonResponse(response_data)
         return response_data
 
 
@@ -96,5 +96,5 @@ class CollectionController:
         except Person.DoesNotExist:
             pass
 
-        return SuzdalenkoJsonResponse({"route":"deleted"})
+        return DiscoJsonResponse({"route":"deleted"})
 

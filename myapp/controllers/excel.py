@@ -6,7 +6,7 @@ from django.db import connection
 from pathlib import Path
 from openpyxl.styles import Alignment, PatternFill, Font, Color
 from myapp.models import CollectionLines
-from myapp.myresponse import SuzdalenkoJsonResponse, UserLoginCorrectry, get_current_file_directory
+from myapp.myresponse import DiscoJsonResponse, UserLoginCorrectry, get_current_file_directory
 
 
 class Excel:
@@ -75,7 +75,7 @@ class Excel:
             tA.setDaemon(True)
             tA.start()
 
-            return SuzdalenkoJsonResponse({"res":urlExcel})
+            return DiscoJsonResponse({"res":urlExcel})
     
 
     def doCrawl(urlFile):

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from ..myresponse import SetLocateAddress, SuzdalenkoJsonResponse
+from ..myresponse import SetLocateAddress, DiscoJsonResponse
 from ..models import Person, LastVisit
 import datetime
 
@@ -34,7 +34,7 @@ class PersonController:
         response_data['time']    = VISIT_OBJ.time
         response_data['visit']   = VISIT_OBJ.visit
 
-        return SuzdalenkoJsonResponse(response_data)
+        return DiscoJsonResponse(response_data)
     
 
     def save_user_location(request):
@@ -49,7 +49,7 @@ class PersonController:
             response_data['region']  = personA.region
             response_data['city']    = personA.city 
             SetLocateAddress(personA)
-            return SuzdalenkoJsonResponse(response_data)
+            return DiscoJsonResponse(response_data)
         except:
             pass
       

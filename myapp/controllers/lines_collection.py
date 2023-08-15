@@ -1,5 +1,5 @@
 from ..models import CollectionLines, Person
-from ..myresponse import OrderingPackagesByTruck, SuzdalShortJson, SuzdalenkoJsonResponse, UserLoginCorrectry
+from ..myresponse import OrderingPackagesByTruck, RecalculateThisRoute, SuzdalShortJson, DiscoJsonResponse, UserLoginCorrectry
 from django.db import connection
 
 class LinesCollectionController:
@@ -28,13 +28,13 @@ class LinesCollectionController:
                 for line in slq_req:
                     empty_obj = {"id": line[0],"order_id":line[1],"client_name":line[2],"truck_name":line[3],"plat":line[4],"plng":line[5],"palets":line[6],"kilos":line[7],"clat":line[8],"clng":line[9],"city":line[10],"truck":line[11],"by_order":line[12]}
                     array_data.append(empty_obj)
-                return SuzdalenkoJsonResponse({'result':array_data})
+                return DiscoJsonResponse({'result':array_data})
     
 
 
     def dataupdate(request, actionpost):
         if UserLoginCorrectry(request) != True:
-            return SuzdalenkoJsonResponse({'user':'dont login'})
+            return DiscoJsonResponse({'user':'dont login'})
         
         cursor = connection.cursor()
 
@@ -147,6 +147,9 @@ class LinesCollectionController:
 
                 CollectionLines.objects.filter(id=FIRST_ID).update(by_order=SECOND_ORDER)
 
+            # /post_parameters/recalculate_route
+            case 'recalculate_route':
+                RecalculateThisRoute(RQ_COLLECTION_ID, TRACK_ID)
                         
 
 
@@ -155,5 +158,5 @@ class LinesCollectionController:
 
                   
         cursor.close()
-        return SuzdalenkoJsonResponse({'actionpostSuzdalenko' : actionpost})
+        return DiscoJsonResponse({'actionpostDisco' : actionpost})
         

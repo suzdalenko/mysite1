@@ -1,7 +1,7 @@
 from openpyxl.styles import Alignment, PatternFill, Font, Color
 import openpyxl
 from myapp.models import CollectionLines
-from myapp.myresponse import SuzdalenkoJsonResponse, OrderingPackagesByTruck
+from myapp.myresponse import DiscoJsonResponse, OrderingPackagesByTruck
 
 class Api:
 
@@ -15,7 +15,7 @@ class Api:
         ws.append(["xxxxxxxxxxxx", "xxxxxxxxxxxx", "xxxxxxxxxxxx"])
         ws.append(["xxxxxxxxxxxx", "xxxxxxxxxxxx", "xxxxxxxxxxxx"])
 
-        ws['A2'] = "suzdalenko alexey"
+        ws['A2'] = "Disco"
 
         a1 = ws['A1']
         ft = Font(color="FFFFFF", italic=True, size=22)
@@ -58,4 +58,4 @@ class Api:
 
 
 
-        return SuzdalenkoJsonResponse({"route":"deleted"}) 
+        return DiscoJsonResponse({"route":"deleted"}) 
