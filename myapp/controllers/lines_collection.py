@@ -147,6 +147,7 @@ class LinesCollectionController:
 
                 CollectionLines.objects.filter(id=FIRST_ID).update(by_order=SECOND_ORDER)
 
+
             # /post_parameters/recalculate_route
             case 'recalculate_route':
                 RecalculateThisRoute(RQ_COLLECTION_ID, TRACK_ID)
