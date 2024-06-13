@@ -1,6 +1,6 @@
-pip install openpyxl
-python manage.py runserver
-
+###### pip install openpyxl
+###### python manage.py runserver
+######
 
 
 python -m django --version
