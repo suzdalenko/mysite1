@@ -1,3 +1,8 @@
+pip install openpyxl
+python manage.py runserver
+
+
+
 python -m django --version
 
 python -m django startproject myproject
@@ -15,6 +20,7 @@ pip install mysqlclient
 python manage.py makemigrations myapp
 
 python manage.py migrate myapp
+
 
 
 
