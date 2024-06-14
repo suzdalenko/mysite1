@@ -23,10 +23,11 @@ class Person(models.Model):
     city     = models.CharField(max_length=22, null=True)
     lat      = models.CharField(max_length=33, null=True)
     lng      = models.CharField(max_length=33, null=True)
+    other    = models.CharField(max_length=11, null=True)
     class Meta:
         db_table = 'person'
         indexes  = [
-            models.Index(fields=['email']),
+            models.Index(fields=['email', 'uid']),
         ]
 
 
