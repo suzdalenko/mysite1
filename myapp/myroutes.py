@@ -1,4 +1,5 @@
 from django.urls import path
+from .controllers.index import index_page
 from .controllers.excel import Excel
 from .controllers.api import Api
 from .controllers import person, collection, lines_collection, report
@@ -6,7 +7,7 @@ from .controllers import person, collection, lines_collection, report
 
 urlpatterns = [
     # path('hello/', person.say_hello),
-    # path('html/', person.say_html),
+    path('index/', index_page),
 
     path('userLogin/', person.PersonController.userLogin),
     path('save_user_location/', person.PersonController.save_user_location),

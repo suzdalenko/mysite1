@@ -52,4 +52,3 @@ class PersonController:
             return DiscoJsonResponse(response_data)
         except:
             pass
-      
