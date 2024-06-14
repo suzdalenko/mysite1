@@ -26,7 +26,7 @@ class Person(models.Model):
     class Meta:
         db_table = 'person'
         indexes  = [
-            models.Index(fields=['email', 'uid']),
+            models.Index(fields=['email']),
         ]
 
 
